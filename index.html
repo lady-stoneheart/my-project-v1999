@@ -1,82 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Project Roadmap Portal</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root { --primary: #000000; --bg: #ffffff; }
-body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; color: #000000; margin: 0; padding: 0; }
-.hidden { display: none !important; }
-.loader { border-top-color: #000000; animation: spin 1s linear infinite; }
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-.stagger-item { opacity: 0; animation: staggerIn 0.5s ease forwards; }
-@keyframes staggerIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.filter-pill.active { background-color: #000000; color: #ffffff; }
-.milestone-details { max-height: 0; overflow: hidden; transition: all 0.4s ease; opacity: 0; }
-.milestone-details.expanded { max-height: 2000px; opacity: 1; margin-top: 1.5rem; }
-</style>
-<script type="importmap">
-{
-  "imports": {
-    "https://www.gstatic.com/firebasejs/10.7.1/": "https://www.gstatic.com/firebasejs/10.7.1/"
-  }
-}
-</script>
-</head>
-<body class="antialiased">
-    <div id="global-loader" class="fixed inset-0 z-[1000] bg-white flex items-center justify-center">
-        <div class="loader w-12 h-12 border-4 border-neutral-100 rounded-full"></div>
+<!-- Updated Social Feed Elements -->
+<div id="view-feed">
+    <div id="feed-admin-panel">
+        <label for="feed-post-text">Post:</label>
+        <input type="text" id="feed-post-text" name="feed-post-text" placeholder="What's on your mind?">
+        <input type="file" id="feed-image-upload" name="feed-image-upload">
+        <button id="feed-submit-post" name="feed-submit-post">Submit Post</button>
     </div>
-
-    <section id="view-auth" class="hidden min-h-screen flex items-center justify-center p-6">
-        <div class="w-full max-w-md">
-            <h1 id="auth-title" class="text-4xl font-black mb-8 uppercase tracking-tighter text-black">Sign In</h1>
-            <form id="auth-form" class="space-y-4">
-                <input type="email" id="email" placeholder="Email" class="w-full p-4 border-2 border-black rounded-2xl outline-none" required>
-                <input type="password" id="password" placeholder="Password" class="w-full p-4 border-2 border-black rounded-2xl outline-none" required>
-                <button type="submit" id="auth-submit-btn" class="w-full p-4 bg-black text-white font-black rounded-2xl uppercase">Enter Dashboard</button>
-            </form>
-            <p id="auth-toggle" class="mt-6 text-center text-xs font-black uppercase cursor-pointer hover:underline">Or Create Account</p>
+    <div id="poll-creator">
+        <label for="poll-question">Poll Question:</label>
+        <input type="text" id="poll-question" name="poll-question" placeholder="Ask a question?">
+        <div id="poll-options">
+            <label for="poll-option-1">Option 1:</label>
+            <input type="text" id="poll-option-1" name="poll-option-1">
+            <label for="poll-option-2">Option 2:</label>
+            <input type="text" id="poll-option-2" name="poll-option-2">
+            <label for="poll-option-3">Option 3:</label>
+            <input type="text" id="poll-option-3" name="poll-option-3">
+            <label for="poll-option-4">Option 4:</label>
+            <input type="text" id="poll-option-4" name="poll-option-4">
         </div>
-    </section>
-
-    <aside id="sidebar" class="hidden fixed left-0 top-0 h-full w-64 bg-white border-r-2 border-black z-50">
-        <div class="p-8">
-            <h2 class="text-2xl font-black mb-8 text-black">PORTAL</h2>
-            <nav class="space-y-2">
-                <button id="nav-roadmap" onclick="window.switchView('roadmap')" class="w-full text-left p-3 font-black uppercase text-xs">Roadmap</button>
-                <button id="nav-feed" onclick="window.switchView('feed')" class="w-full text-left p-3 font-black uppercase text-xs">Community</button>
-            </nav>
-            <div class="mt-20">
-                <p id="nav-user-email" class="text-[10px] font-bold text-neutral-400 truncate"></p>
-                <span id="nav-user-role"></span>
-            </div>
-        </div>
-    </aside>
-
-    <main class="min-h-screen lg:ml-64 p-6 sm:p-12">
-        <div id="view-dashboard" class="hidden max-w-5xl mx-auto">
-            <div id="admin-panel" class="hidden mb-12 p-8 border-2 border-black rounded-[2rem] bg-neutral-50">
-                <form id="post-form" class="space-y-4">
-                    <input id="post-title" placeholder="Milestone Title" class="w-full p-3 border-2 border-black rounded-xl">
-                    <textarea id="post-short-desc" placeholder="Summary" class="w-full p-3 border-2 border-black rounded-xl"></textarea>
-                    <textarea id="post-long-desc" placeholder="Full Details" class="w-full p-3 border-2 border-black rounded-xl"></textarea>
-                    <textarea id="post-tasks" placeholder="Tasks (one per line)" class="w-full p-3 border-2 border-black rounded-xl"></textarea>
-                    <select id="post-depends-on" class="w-full p-3 border-2 border-black rounded-xl"></select>
-                    <input type="file" id="post-images-file" multiple class="block text-xs">
-                    <button type="submit" id="post-submit-btn" class="bg-black text-white px-8 py-3 rounded-xl font-black uppercase text-xs">Manual Post</button>
-                </form>
-            </div>
-            <div id="roadmap-container" class="space-y-4"></div>
-        </div>
-        <div id="view-feed" class="hidden max-w-2xl mx-auto">
-            <div id="social-feed-container"></div>
-        </div>
-    </main>
-
-    <script type="module" src="index.js"></script>
-</body>
-</html>
+        <button id="create-poll" name="create-poll">Create Poll</button>
+    </div>
+</div>
