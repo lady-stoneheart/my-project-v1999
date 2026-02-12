@@ -7,24 +7,17 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* YOUR EXACT DESIGNS - UNTOUCHED */
 :root { --primary: #000000; --bg: #ffffff; }
-body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background-color: #ffffff;
-    color: #000000;
-    margin: 0; padding: 0;
-}
+body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; color: #000000; margin: 0; padding: 0; }
 .hidden { display: none !important; }
+.loader { border-top-color: #000000; animation: spin 1s linear infinite; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .stagger-item { opacity: 0; animation: staggerIn 0.5s ease forwards; }
 @keyframes staggerIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .filter-pill.active { background-color: #000000; color: #ffffff; }
-.roadmap-line { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: #000000; opacity: 0.1; transform: translateX(-50%); }
 .milestone-details { max-height: 0; overflow: hidden; transition: all 0.4s ease; opacity: 0; }
 .milestone-details.expanded { max-height: 2000px; opacity: 1; margin-top: 1.5rem; }
-/* ... other styles from your original design ... */
 </style>
-
 <script type="importmap">
 {
   "imports": {
@@ -34,14 +27,13 @@ body {
 </script>
 </head>
 <body class="antialiased">
-
     <div id="global-loader" class="fixed inset-0 z-[1000] bg-white flex items-center justify-center">
         <div class="loader w-12 h-12 border-4 border-neutral-100 rounded-full"></div>
     </div>
 
     <section id="view-auth" class="hidden min-h-screen flex items-center justify-center p-6">
         <div class="w-full max-w-md">
-            <h1 id="auth-title" class="text-4xl font-black mb-8 uppercase tracking-tighter">Sign In</h1>
+            <h1 id="auth-title" class="text-4xl font-black mb-8 uppercase tracking-tighter text-black">Sign In</h1>
             <form id="auth-form" class="space-y-4">
                 <input type="email" id="email" placeholder="Email" class="w-full p-4 border-2 border-black rounded-2xl outline-none" required>
                 <input type="password" id="password" placeholder="Password" class="w-full p-4 border-2 border-black rounded-2xl outline-none" required>
@@ -51,12 +43,12 @@ body {
         </div>
     </section>
 
-    <aside id="sidebar" class="hidden fixed left-0 top-0 h-full w-64 bg-white border-r-2 border-black z-50 transition-transform">
+    <aside id="sidebar" class="hidden fixed left-0 top-0 h-full w-64 bg-white border-r-2 border-black z-50">
         <div class="p-8">
-            <h2 class="text-2xl font-black mb-8">PORTAL</h2>
+            <h2 class="text-2xl font-black mb-8 text-black">PORTAL</h2>
             <nav class="space-y-2">
-                <button id="nav-roadmap" onclick="window.switchView('roadmap')" class="sidebar-item active w-full text-left p-3 font-black uppercase text-xs">Roadmap</button>
-                <button id="nav-feed" onclick="window.switchView('feed')" class="sidebar-item w-full text-left p-3 font-black uppercase text-xs">Community</button>
+                <button id="nav-roadmap" onclick="window.switchView('roadmap')" class="w-full text-left p-3 font-black uppercase text-xs">Roadmap</button>
+                <button id="nav-feed" onclick="window.switchView('feed')" class="w-full text-left p-3 font-black uppercase text-xs">Community</button>
             </nav>
             <div class="mt-20">
                 <p id="nav-user-email" class="text-[10px] font-bold text-neutral-400 truncate"></p>
@@ -66,48 +58,25 @@ body {
     </aside>
 
     <main class="min-h-screen lg:ml-64 p-6 sm:p-12">
-        
         <div id="view-dashboard" class="hidden max-w-5xl mx-auto">
             <div id="admin-panel" class="hidden mb-12 p-8 border-2 border-black rounded-[2rem] bg-neutral-50">
-                <h3 class="font-black uppercase mb-4">New Milestone</h3>
                 <form id="post-form" class="space-y-4">
                     <input id="post-title" placeholder="Milestone Title" class="w-full p-3 border-2 border-black rounded-xl">
-                    <textarea id="post-short-desc" placeholder="Brief summary" class="w-full p-3 border-2 border-black rounded-xl"></textarea>
-                    <textarea id="post-long-desc" placeholder="Detailed instructions" class="w-full p-3 border-2 border-black rounded-xl"></textarea>
-                    <textarea id="post-tasks" placeholder="Tasks (One per line)" class="w-full p-3 border-2 border-black rounded-xl"></textarea>
+                    <textarea id="post-short-desc" placeholder="Summary" class="w-full p-3 border-2 border-black rounded-xl"></textarea>
+                    <textarea id="post-long-desc" placeholder="Full Details" class="w-full p-3 border-2 border-black rounded-xl"></textarea>
+                    <textarea id="post-tasks" placeholder="Tasks (one per line)" class="w-full p-3 border-2 border-black rounded-xl"></textarea>
                     <select id="post-depends-on" class="w-full p-3 border-2 border-black rounded-xl"></select>
                     <input type="file" id="post-images-file" multiple class="block text-xs">
                     <button type="submit" id="post-submit-btn" class="bg-black text-white px-8 py-3 rounded-xl font-black uppercase text-xs">Manual Post</button>
                 </form>
             </div>
-
             <div id="roadmap-container" class="space-y-4"></div>
         </div>
-
         <div id="view-feed" class="hidden max-w-2xl mx-auto">
             <div id="social-feed-container"></div>
         </div>
     </main>
 
-    <div id="edit-modal" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4">
-        <div id="modal-overlay" class="absolute inset-0 bg-white/80 backdrop-blur-sm transition-opacity"></div>
-        <div id="modal-card" class="relative w-full max-w-2xl bg-white border-2 border-black rounded-[2.5rem] p-8 shadow-2xl transition-all scale-95 opacity-0">
-             <form id="edit-form" class="space-y-4">
-                <input type="hidden" id="edit-id">
-                <input id="edit-title" class="w-full p-3 border-2 border-black rounded-xl font-bold">
-                <textarea id="edit-short-desc" class="w-full p-3 border-2 border-black rounded-xl"></textarea>
-                <textarea id="edit-long-desc" class="w-full p-3 border-2 border-black rounded-xl h-32"></textarea>
-                <textarea id="edit-tasks" class="w-full p-3 border-2 border-black rounded-xl"></textarea>
-                <input id="edit-images" class="w-full p-3 border-2 border-black rounded-xl text-xs" placeholder="Image URLs (comma separated)">
-                <select id="edit-depends-on" class="w-full p-3 border-2 border-black rounded-xl"></select>
-                <div class="flex gap-4">
-                    <button type="submit" id="edit-submit-btn" class="flex-1 bg-black text-white p-4 rounded-2xl font-black uppercase">Save</button>
-                    <button type="button" onclick="window.closeEditModal()" class="px-6 border-2 border-black rounded-2xl font-black uppercase">Cancel</button>
-                </div>
-             </form>
-        </div>
-    </div>
-
-    <script type="module" src="index.tsx"></script>
+    <script type="module" src="index.js"></script>
 </body>
 </html>
